@@ -1,5 +1,7 @@
 ''' Aula Inteligencia Artificial '''
-import csv
+import pandas as pd
+import scipy.io as sp
+
 
 #Matriz de caminhos e custos.
 #Pegar pelo excel ou fazer na mao
@@ -43,20 +45,31 @@ def bfd(A,ini,fim):
         return
     return    
 
-print ("Começou")
-mapa = open('mapa.csv','rb')
+def getMap():
 
-reader = csv.reader(mapa)
+    data = sp.loadmat('data_Romenia.mat')
 
-A = []
-for linha in mapa:
-    print (linha)
-    A += linha
+    columname = []
+    for a in data['labels']:
+        columname.append(a[0][0])
 
-print (A)
+    df = pd.DataFrame(data['A'],columns=columname, index=columname)
 
-A 
-    #bfd(mapa,0,8)
+    return(df)
+    
+    #print(df[df['Zerind']>0]['Zerind'])
+
+def main():
+    mapa = getMap()
+
+    no_pai = 'Arad'
+
+    n = mapa[mapa[no_pai]>0][no_pai]
+     
+    
+    print(no)
+#Inicio do programa
+main()
 
 
 '''
