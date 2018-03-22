@@ -48,7 +48,7 @@ def bfd(A,ini,fim):
 def getMap():
 
     data = sp.loadmat('data_Romenia.mat')
-
+    
     columname = []
     for a in data['labels']:
         columname.append(a[0][0])
@@ -62,12 +62,16 @@ def getMap():
 def main():
     mapa = getMap()
 
-    no_pai = 'Arad'
+    no = 'Arad'
 
-    n = mapa[mapa[no_pai]>0][no_pai]
-     
+    n = mapa[mapa[no]>0][no]
+
+    opcoes = list(n.index.values)
+
+    no = opcoes[0]
     
-    print(no)
+    print( no )
+    #print(no)
 #Inicio do programa
 main()
 
