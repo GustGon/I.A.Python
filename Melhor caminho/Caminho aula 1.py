@@ -1,4 +1,4 @@
-''' Aula Inteligencia Artificial '''
+'''' Aula Inteligencia Artificial '''
 import pandas as pd
 import scipy.io as sp
 
@@ -6,8 +6,11 @@ import scipy.io as sp
 #Matriz de caminhos e custos.
 #Pegar pelo excel ou fazer na mao
 
+explorado = []; #Inicia o conjunto explorado como vazio
+caminho = []; #Inicia o caminho como vazio
 
-def bfd(A,ini,fim):
+
+def bfd(mapa,ini,fim):
 
     node = ini
     custo = 0
@@ -24,11 +27,22 @@ def bfd(A,ini,fim):
     caminho = []; #Inicia o caminho como vazio
 
     while(fronteira):
-        
 
+        aux = mapa[mapa[node]>0][node]
+        opcoes = list(aux.index.values)
+        
+        node = fronteira.pop(0)
+        explorado.append(node)
+
+        for filho in opcoes:
+            if not explorado.count(filho) > 0 or not fronteira.count(filho) > 0 :
+                if( filho == fim ):
+                    return filho
+                else:
+                    fronteira.append([filho,node,0])
+        
         '''
-        seu condigo aki
-        se FRONTEIRA = VAZIO entao retorne FALHA
+        se FRONTEIRA = VAZIO entao retorne FALHA /
         nó <- POP(FRONTEIRA) /escolhe o nó mais razo da fronteira
         adiciona NÓ a EXPLORADO
         para cada ACAO em ACOES(NÓ) faça
@@ -43,7 +57,12 @@ def bfd(A,ini,fim):
         custo = -1
         print("Não foi possível encontrar um caminho do nó de início ao nó de destino.")
         return
-    return    
+    return
+
+def solucao(node):
+
+    
+    return caminho
 
 def getMap():
 
@@ -61,18 +80,27 @@ def getMap():
 
 def main():
     mapa = getMap()
+    
+    bfd(mapa,'Arad','Bucharest')
+    '''
+    mapa = getMap()
 
     no = 'Arad'
 
     n = mapa[mapa[no]>0][no]
 
     opcoes = list(n.index.values)
+    ur = opcoes.pop(0)
 
     no = opcoes[0]
     
-    print( no )
+    print( opcoes )
+    print( ur )
     #print(no)
+    '''
 #Inicio do programa
+
+    
 main()
 
 
