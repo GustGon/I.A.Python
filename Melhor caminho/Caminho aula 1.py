@@ -8,7 +8,7 @@ import scipy.io as sp
 
 explorado = []; #Inicia o conjunto explorado como vazio
 caminho = []; #Inicia o caminho como vazio
-
+fronteira = [];
 
 def bfd(mapa,ini,fim):
 
@@ -22,35 +22,24 @@ def bfd(mapa,ini,fim):
         return
     
 
-    fronteira  = [ini, ini, 0]; #[Nó, Nó_Pai, Custo]
-    explorado = []; #Inicia o conjunto explorado como vazio
-    caminho = []; #Inicia o caminho como vazio
+    fronteira.append([ini, ini, 0]); #[Nó, Nó_Pai, Custo]
+    i = 0; #Começa no primeiro elemento da fronteira.
 
     while(fronteira):
 
-        aux = mapa[mapa[node]>0][node]
-        opcoes = list(aux.index.values)
+        node = fronteira.pop(i) #Tira da fronteira o nó analisado.
+        explorado.append(node)  #Adiciona no  explorados o nó analisado.
         
-        node = fronteira.pop(0)
-        explorado.append(node)
+        aux = mapa[mapa[node[0]]>0][node[0]]
+        opcoes = list(aux.index.values)
 
-        for filho in opcoes:
+        for filho in opcoes:    #Possiveis caminhos a seguir a partir do nó.
             if not explorado.count(filho) > 0 or not fronteira.count(filho) > 0 :
                 if( filho == fim ):
-                    return filho
+                    return solucao(filho,ini)
                 else:
-                    fronteira.append([filho,node,0])
-        
-        '''
-        se FRONTEIRA = VAZIO entao retorne FALHA /
-        nó <- POP(FRONTEIRA) /escolhe o nó mais razo da fronteira
-        adiciona NÓ a EXPLORADO
-        para cada ACAO em ACOES(NÓ) faça
-            FILHO <- FILHO-NÓ(problema,NÓ,AÇÃO)
-            se FILHO não esta em EXPLORADO ou FRONTEIRA entao
-                se FILHO = OBJETIVO entao retorne SOLUÇÃO(FILHO)
-                FRONTEIRA <- INSERIR(FILHO, FRONTEIRA)
-        '''
+                    fronteira.append([filho,node[0],0])
+        i += 1
         
     if(not fronteira):
         caminho = -1
@@ -59,10 +48,24 @@ def bfd(mapa,ini,fim):
         return
     return
 
-def solucao(node):
+def solucao(fim,ini):
 
+    menor = []
+    menor.append(explorado[len(explorado) - 1][0])
     
-    return caminho
+    proximo = explorado[len(explorado) - 1][0]
+    
+    for n in range(len(explorado) - 1,0,-1):
+        if ( explorado[n][0] == proximo ):
+            menor.append(explorado[n][1])
+            proximo = explorado[n][1]
+        if ( proximo == ini ):
+            break
+    for p in range(len(menor) - 1,-1,-1):
+        caminho.append(menor[p])    
+    caminho.append(fim)
+        
+    return print(caminho)
 
 def getMap():
 
@@ -75,62 +78,13 @@ def getMap():
     df = pd.DataFrame(data['A'],columns=columname, index=columname)
 
     return(df)
-    
-    #print(df[df['Zerind']>0]['Zerind'])
 
 def main():
     mapa = getMap()
     
-    bfd(mapa,'Arad','Bucharest')
-    '''
-    mapa = getMap()
+    bfd(mapa,'Zerind','Bucharest')
 
-    no = 'Arad'
 
-    n = mapa[mapa[no]>0][no]
-
-    opcoes = list(n.index.values)
-    ur = opcoes.pop(0)
-
-    no = opcoes[0]
-    
-    print( opcoes )
-    print( ur )
-    #print(no)
-    '''
 #Inicio do programa
-
     
 main()
-
-
-'''
-
-function [caminho, custo] = bfs(A,ini,fim)
-
-node = ini;
-custo = 0;
-
-if(node == fim)
-    caminho = 0;
-    custo = 0;
-    disp('O n� de in�cio j� � o n� de destino.');
-    return
-end
-
-fronteira  = [ini ini 0]; %[N�, N�_Pai, Custo]
-explorado = []; %Inicia o conjunto explorado como vazio
-caminho = []; %Inicia o caminho como vazio
-
-while(~isempty(fronteira))
-    %seu c�digo aqui
-end
-if (lenght(fronteira)==0)
-        caminho = -1;
-        custo = -1;
-        disp('N�o foi poss�vel encontrar um caminho do n� de in�cio ao n� de destino.');
-        return
-end
-end
-
-'''
