@@ -27,19 +27,19 @@ def bfd(mapa,ini,fim):
 
     while(fronteira):
 
-        node = fronteira.pop(i) #Tira da fronteira o nó analisado.
+        node = fronteira.pop(0) #Tira da fronteira o nó analisado.
         explorado.append(node)  #Adiciona no  explorados o nó analisado.
         
-        aux = mapa[mapa[node[0]]>0][node[0]]
-        opcoes = list(aux.index.values)
+        aux = mapa[mapa[node[0]]>0][node[0]]    #possiveis caminhos com respectivos pessos
+        opcoes = list(aux.index.values)         #opcoes com apenas seus nomes
 
         for filho in opcoes:    #Possiveis caminhos a seguir a partir do nó.
-            if not explorado.count(filho) > 0 or not fronteira.count(filho) > 0 :
+            filhoCompleto = [filho, node[0], 0]  
+            if not explorado.count(filhoCompleto) > 0 or not fronteira.count(filhoCompleto) > 0 :   #TODO: Nao esta verificando direito Explorado e Fronteira
                 if( filho == fim ):
                     return solucao(filho,ini)
                 else:
                     fronteira.append([filho,node[0],0])
-        i += 1
         
     if(not fronteira):
         caminho = -1
@@ -82,7 +82,7 @@ def getMap():
 def main():
     mapa = getMap()
     
-    bfd(mapa,'Zerind','Bucharest')
+    bfd(mapa,'Neamt','Bucharest')
 
 
 #Inicio do programa
