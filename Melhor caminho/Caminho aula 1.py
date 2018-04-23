@@ -23,8 +23,7 @@ def bfd(mapa,ini,fim):
     
 
     fronteira.append([ini, ini, 0]); #[Nó, Nó_Pai, Custo]
-    i = 0; #Começa no primeiro elemento da fronteira.
-
+    
     while(fronteira):
 
         node = fronteira.pop(0) #Tira da fronteira o nó analisado.
