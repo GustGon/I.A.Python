@@ -16,6 +16,7 @@ def estrela(mapa,ini,fim):
     H = 0
     F = G + H 
     node = [ini, G, H, F]
+    custo = 0
 
     if(node[0] == fim):
         print('O n de inicio ja é o nó de destino.');
@@ -25,23 +26,36 @@ def estrela(mapa,ini,fim):
 
     while(fronteira):
 
-        node = maisBarato(fronteira) #Nó mais leve da fronteira.
+        #ind = maisBarato(fronteira)
+        node = fronteira.pop(0) #Nó mais leve da fronteira.
         if( node[0] == fim):
             return solucao(node[0], ini)
         
         explorado.append(node)  #Adiciona no  explorados o nó analisado.
         
-        aux = mapa[mapa[node[0]]>0][node[0]]    #possiveis caminhos com respectivos pessos
-        opcoes = list(aux.index.values)         #opcoes com apenas seus nomes
+        tabelaPeso = mapa[mapa[node[0]]>0][node[0]]    #possiveis caminhos com respectivos pessos
+        opcoes = list(tabelaPeso.index.values)         #opcoes com apenas seus nomes
 
         for filho in opcoes:    #Possiveis caminhos a seguir a partir do nó.
-            filhoCompleto = [filho, node[0], 0]  
-            if not explorado.count(filhoCompleto) > 0 or not fronteira.count(filhoCompleto) > 0 :   #TODO: Nao esta verificando direito Explorado e Fronteira
-                if( filho == fim ):
-                    return solucao(filho,ini)
-                else:
-                    fronteira.append([filho,node[0],0])
-        
+            
+            H_F = tabelaPeso[filho]
+            filhoCompleto = [filho[0], node[0], filho[1]]  
+            
+            if ( not explorado.count(filhoCompleto) > 0 ):# or not fronteira.count(filhoCompleto) > 0 :   #TODO: Nao esta verificando direito Explorado e Fronteira
+                
+                G_tempF = G + custo
+                
+                if( not fronteira.count(filhoCompleto) > 0 ):
+                    
+                    fronteira.append([filho,node[0],node[2]])
+                    G_F = G_tempF
+                    F_F = G_F + H_F
+
+                else if( G_F > G_tempF ):
+                    
+                    G_F = G_tempF
+                    F_F = G_F + H_F
+                    
     if(not fronteira):
         caminho = -1
         custo = -1
@@ -56,8 +70,8 @@ def maisBarato(fronteira):
     for front in fronteira:
         peso = front[len(front) - 1]
         if ( peso < ref ):
-            maisBarato = peso
-            maisBarato = fronteira.pop(fronteira.index)
+            maisBarato = front.index
+            #maisBarato = fronteira.pop(fronteira.index)
             
     return maisBarato
 
@@ -95,7 +109,7 @@ def getMap():
 def main():
     mapa = getMap()
     
-    estrela(mapa,'Neamt','Bucharest')
+    estrela(mapa,'Arad','Bucharest')
 
 
 #Inicio do programa
