@@ -3,8 +3,11 @@ import pandas as pd
 import scipy.io as sp
 
 
-#Matriz de caminhos e custos.
-#Pegar pelo excel ou fazer na mao
+distNome = ["Arad", "Bucharest", "Craiova", "Drobeta", "Eforie", "Fagaras", "Giurgi",
+        "Hirsova", "Iasi", "Lugoj", "Mehadia", "Neamt", "Oradea", "Pitesti", "Rimnicu Vilcea",
+        "Sibiu", "Timisoara", "Urziceni", "Vaslui", "Zerid"]
+distQuant = [366, 0, 160, 242, 161, 176, 77, 151, 226, 244, 241, 234, 380, 100, 193, 253, 329,
+               80, 199, 374]
 
 explorado = []; #Inicia o conjunto explorado como vazio
 caminho = []; #Inicia o caminho como vazio
@@ -17,6 +20,7 @@ def estrela(mapa,ini,fim):
     F = G + H 
     node = [ini, G, H, F]
     custo = 0
+    #dist = pd.DataFrame(distQuant, distNome)
 
     if(node[0] == fim):
         print('O n de inicio ja é o nó de destino.');
@@ -38,7 +42,8 @@ def estrela(mapa,ini,fim):
 
         for filho in opcoes:    #Possiveis caminhos a seguir a partir do nó.
             
-            H_F = tabelaPeso[filho]
+            G = tabelaPeso[filho]
+            #H_F = dist[0]
             filhoCompleto = [filho[0], node[0], filho[1]]  
             
             if ( not explorado.count(filhoCompleto) > 0 ):# or not fronteira.count(filhoCompleto) > 0 :   #TODO: Nao esta verificando direito Explorado e Fronteira
@@ -51,10 +56,11 @@ def estrela(mapa,ini,fim):
                     G_F = G_tempF
                     F_F = G_F + H_F
 
-                else if( G_F > G_tempF ):
+                else:             
+                    if( G_F > G_tempF ):
                     
-                    G_F = G_tempF
-                    F_F = G_F + H_F
+                        G_F = G_tempF
+                        F_F = G_F + H_F
                     
     if(not fronteira):
         caminho = -1
@@ -107,10 +113,12 @@ def getMap():
     return(df)
 
 def main():
-    mapa = getMap()
-    
-    estrela(mapa,'Arad','Bucharest')
-
+    #mapa = getMap()
+    dist = pd.DataFrame(distQuant, distNome)
+    tt = dist.index("Arad")
+    #estrela(mapa,'Arad','Bucharest')
+    #H_F = 
+    print(tt)
 
 #Inicio do programa
     
