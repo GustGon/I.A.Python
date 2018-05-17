@@ -18,12 +18,15 @@ BLACK_GREEN = (0, 125, 0)
 LIGTH_GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+ALGUMA = (125, 125, 125)
 
+NADA = 0
 COMECO = 1
 FIM = 2
 OBSTACULO = 3
 FRONTEIRA = 4
 EXPLORADO = 5
+CAMINHO = 6
  
 # This sets the WIDTH and HEIGHT of each grid location
 WIDTH = 20
@@ -76,6 +79,10 @@ def encontraCaminho(ini, end):
         
         explorado.append(node)  #Adiciona no  explorados o nó analisado.
         
+        quadrado = grid[node[0][1]][node[0][0]]
+        if ( quadrado == NADA or quadrado == FRONTEIRA ):
+            grid[node[0][1]][node[0][0]] = EXPLORADO
+        
         if( node[0] == end):
             return solucao(ini)    
 
@@ -85,25 +92,25 @@ def encontraCaminho(ini, end):
             H = getDistValue(filho, end);
             F = G + H;
             filhoCompleto = [filho, node[0], G, H, F]
-            column = filho[0]
-            row = filho[1]
+            column = filho[1]
+            row = filho[0]
             
             if ( not isExplorado(filhoCompleto) ):
                 
                 G_tempF = G + custo
             
-            elif( ( not fronteira.count(filhoCompleto) > 0 ) and
-                 not( 0 > column > WIDTH or 0 > row > HEIGHT ) ):
+                if( ( not fronteira.count(filhoCompleto) > 0 ) and
+                     (grid[row][column] == NADA or grid[row][column] == FRONTEIRA)):
+                        
+                    fronteira.append(filhoCompleto)
+                    G_F = G_tempF
+                    #F_F = G_F + H
+                    #custo += F_F
+    
+                elif( G_F > G_tempF ):
                     
-                fronteira.append(filhoCompleto)
-                G_F = G_tempF
-                #F_F = G_F + H
-                #custo += F_F
-
-            elif( G_F > G_tempF ):
-                
-                G_F = G_tempF
-                #F_F = G_F + H
+                    G_F = G_tempF
+                    #F_F = G_F + H
     
     return
 
@@ -111,17 +118,19 @@ def getAcoes(local):
     
     opcoes = []
     
-    opcoes.append([local[0][0] + 1, local[1][1] + 1]);
+    #opcoes.append([local[0][0] + 1, local[1][1] + 1]);
     opcoes.append([local[0][0] + 0, local[1][1] + 1]);
-    opcoes.append([local[0][0] + 1, local[1][1] - 1]);
+    #opcoes.append([local[0][0] + 1, local[1][1] - 1]);
     opcoes.append([local[0][0] + 1, local[1][1] + 0]);
-    opcoes.append([local[0][0] - 1, local[1][1] - 1]);
+    #opcoes.append([local[0][0] - 1, local[1][1] - 1]);
     opcoes.append([local[0][0] - 0, local[1][1] - 1]);
-    opcoes.append([local[0][0] - 1, local[1][1] + 1]);
+    #opcoes.append([local[0][0] - 1, local[1][1] + 1]);
     opcoes.append([local[0][0] - 1, local[1][1] - 0]);
     
     for op in opcoes:
-        grid[op[0]][op[1]] = FRONTEIRA
+        quadrado = grid[op[1]][op[0]]
+        if ( quadrado == NADA ):
+            grid[op[1]][op[0]] = FRONTEIRA
     
     return opcoes
 
@@ -163,7 +172,13 @@ def solucao(ini):   #Mostra a rota das cidades e o custo total por passar por el
             break
     
     for p in range(len(menor) - 1,-1,-1):   #Ajusta o caminho na sequencia
-        caminho.append(menor[p])    
+        caminho.append(menor[p])
+            
+    for c in caminho:
+        quadrado = grid[c[1]][c[0]]
+        if( quadrado == EXPLORADO ):
+            grid[c[1]][c[0]] = CAMINHO
+    
 
     return print(caminho, '\n\nCusto do Caminho:',custoCaminho )
 
@@ -240,6 +255,8 @@ def main():
                     color = BLACK_GREEN
                 elif grid[row][column] == EXPLORADO:
                     color = LIGTH_GREEN
+                elif grid[row][column] == CAMINHO:
+                    color = ALGUMA
                 pygame.draw.rect(screen,
                                  color,
                                  [(MARGIN + WIDTH) * column + MARGIN,
