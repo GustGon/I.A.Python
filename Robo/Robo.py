@@ -80,7 +80,7 @@ def encontraCaminho(ini, end):
         explorado.append(node)  #Adiciona no  explorados o nó analisado.
         
         quadrado = grid[node[0][1]][node[0][0]]
-        if ( quadrado == NADA or quadrado == FRONTEIRA ):
+        if ( quadrado == FRONTEIRA ):
             grid[node[0][1]][node[0][0]] = EXPLORADO
         
         if( node[0] == end):
@@ -95,14 +95,14 @@ def encontraCaminho(ini, end):
             column = filho[1]
             row = filho[0]
             
-            if ( not isExplorado(filhoCompleto) ):
+            if ( not isExplorado(filho) ):
                 
                 G_tempF = G + custo
             
-                if( ( not fronteira.count(filhoCompleto) > 0 ) and
-                     (grid[row][column] == NADA or grid[row][column] == FRONTEIRA)):
+                if( not fronteira.count(filhoCompleto) > 0 ):
                         
                     fronteira.append(filhoCompleto)
+                    grid[column][row] = FRONTEIRA
                     G_F = G_tempF
                     #F_F = G_F + H
                     #custo += F_F
@@ -116,21 +116,32 @@ def encontraCaminho(ini, end):
 
 def getAcoes(local):
     
+    baixo = [local[0][0], local[0][1] + 1]
+    cima =  [local[0][0], local[0][1] - 1]
+    esquerda = [local[0][0] - 1, local[0][1]]
+    direita = [local[0][0] + 1, local[0][1]]
+    
     opcoes = []
-    
-    #opcoes.append([local[0][0] + 1, local[1][1] + 1]);
-    opcoes.append([local[0][0] + 0, local[1][1] + 1]);
-    #opcoes.append([local[0][0] + 1, local[1][1] - 1]);
-    opcoes.append([local[0][0] + 1, local[1][1] + 0]);
-    #opcoes.append([local[0][0] - 1, local[1][1] - 1]);
-    opcoes.append([local[0][0] - 0, local[1][1] - 1]);
-    #opcoes.append([local[0][0] - 1, local[1][1] + 1]);
-    opcoes.append([local[0][0] - 1, local[1][1] - 0]);
-    
-    for op in opcoes:
-        quadrado = grid[op[1]][op[0]]
-        if ( quadrado == NADA ):
-            grid[op[1]][op[0]] = FRONTEIRA
+
+    if ( not ((0 > cima[0]) or (cima[0] > row) or (0 > cima[1]) or (cima[1] > row)) and
+        (grid[cima[1]][cima[0]] == NADA or 
+         grid[cima[1]][cima[0]] == FIM)):
+        opcoes.append(cima);
+                    
+    if ( not ((0 > baixo[0]) or (baixo[0] > row) or (0 > baixo[1]) or (baixo[1] > row)) and
+        (grid[baixo[1]][baixo[0]] == NADA or 
+         grid[baixo[1]][baixo[0]] == FIM)):
+        opcoes.append(baixo);
+            
+    if ( not ((0 > esquerda[0]) or (esquerda[0] > row) or (0 > esquerda[1]) or (esquerda[1] > row)) and
+        (grid[esquerda[1]][esquerda[0]] == NADA or 
+         grid[esquerda[1]][esquerda[0]] == FIM)):
+        opcoes.append(esquerda);
+
+    if ( not ((0 > direita[0]) or (direita[0] > row) or (0 > direita[1]) or (direita[1] > row)) and
+        (grid[direita[1]][direita[0]] == NADA or 
+         grid[direita[1]][direita[0]] == FIM)):
+        opcoes.append(direita);
     
     return opcoes
 
