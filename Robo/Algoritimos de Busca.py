@@ -10,7 +10,9 @@ import pygame
 explorado = []; #Inicia o conjunto explorado como vazio
 caminho = []; #Inicia o caminho como vazio
 fronteira = [];
- 
+ini = [];   #Inicio do caminho
+end = [];   #Final do caminho
+
 # Define some colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -57,13 +59,12 @@ for row in range(10):
     #grid[1][5] = 1
  
 
-def encontraCaminho(ini, end):
+def encontraCaminho():
     
     G = 1
-    H = getDistValue(ini, end)
+    H = getDistValue(ini)
     F = G + H 
     node = [ini, ini, G, H, F]
-    custo = 0
 
     if(node[0] == end):
         print('O n de inicio ja é o nó de destino.');
@@ -84,12 +85,12 @@ def encontraCaminho(ini, end):
             grid[node[0][1]][node[0][0]] = EXPLORADO
         
         if( node[0] == end):
-            return solucao(ini)    
+            return solucao()    
 
         for filho in opcoes:    #Possiveis caminhos a seguir a partir do nó.
             
             G = 1;
-            H = getDistValue(filho, end);
+            H = getDistValue(filho);
             F = G + H;
             filhoCompleto = [filho, node[0], G, H, F]
             column = filho[1]
@@ -97,13 +98,14 @@ def encontraCaminho(ini, end):
             
             if ( not isExplorado(filho) ):
                 
-                G_tempF = G + custo
+                G_tempF = G
             
                 if( not fronteira.count(filhoCompleto) > 0 ):
                         
                     fronteira.append(filhoCompleto)
-                    grid[column][row] = FRONTEIRA
                     G_F = G_tempF
+                    if ( grid[column][row] == NADA ):
+                        grid[column][row] = FRONTEIRA
                     #F_F = G_F + H
                     #custo += F_F
     
@@ -166,7 +168,7 @@ def maisBarato(fronteira):  #Get da fronteira com o pesso menor;
             
     return maisBarato
 
-def solucao(ini):   #Mostra a rota das cidades e o custo total por passar por elas;
+def solucao():   #Mostra a rota das cidades e o custo total por passar por elas;
 
     custoCaminho = 0
     menor = []
@@ -193,15 +195,25 @@ def solucao(ini):   #Mostra a rota das cidades e o custo total por passar por el
 
     return print(caminho, '\n\nCusto do Caminho:',custoCaminho )
 
-def getDistValue(ini, end):
-    #Heuclidiana
-    deltaColun = ini[0] - end[0]
-    deltaRow = ini[1] - end[1]
-    dist = (deltaColun**2 + deltaRow**2)**(1/2)
+def getDistValue(filho):
+    
+    deltaColun = filho[0] - end[0]
+    deltaRow = filho[1] - end[1]
+    
+    if( busca ):
+        #Heuclidiana
+        dist = (deltaColun**2 + deltaRow**2)**(1/2)
+    else:
+        #Manhatam
+        dist = abs(deltaRow) + abs(deltaColun)
+    
     return dist
 
 def main():
 
+    global busca; # 1 - Heuclidiana / 0 - Manhatam
+    busca = 0;
+    
     # Initialize pygame
     pygame.init()
      
@@ -210,11 +222,13 @@ def main():
     screen = pygame.display.set_mode(WINDOW_SIZE)
      
     # Set title of screen
-    pygame.display.set_caption("Array Backed Grid")
+    pygame.display.set_caption("Algoritmo de busca")
      
+    #button = pygame.Rect(300, 200, 50, 25)
+    
     # Loop until the user clicks the close button.
     done = False
-     
+    
     # Used to manage how fast the screen updates
     clock = pygame.time.Clock()
     
@@ -223,8 +237,10 @@ def main():
     # -------- Main Program Loop -----------
     while not done:
         for event in pygame.event.get():  # User did something
+            
             if event.type == pygame.QUIT:  # If user clicked close
                 done = True  # Flag that we are done so we exit this loop
+                
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 print( event.button )
                 if ( event.button == LEFT_CLICK ):
@@ -235,23 +251,39 @@ def main():
                     row = pos[1] // (HEIGHT + MARGIN)
                     if ( column >= 10 ):
                         break;
-                    # Set that location to one
-                    grid[row][column] = count
+                    
                     print("Click ", pos, "Grid coordinates: ", row, column)
                     if ( COMECO == count ):
                         grid[row][column] = COMECO;
-                        ini = [column,row]
+                        ini.append(column);
+                        ini.append(row);
+                        #ini = [column,row]
                         count += 1
                     elif ( FIM == count ):
                         grid[row][column] = FIM;
-                        end = [column,row]
+                        end.append(column);
+                        end.append(row);
+                        #end = [column,row]
                         count += 1
+                    elif( grid[row][column] == NADA ):
+                        grid[row][column] = count
                 elif ( event.button == RIGHT_CLICK ):
-                    encontraCaminho(ini, end);
-    
+                    encontraCaminho();
+                    
+            elif( event.type == pygame.KEYDOWN ):
+                print( event.key )
+                if( event.key == pygame.K_m ):
+                    busca = 0;
+                    print('Busca por distancia Manhatam!!')
+                elif( event.key == pygame.K_h ):
+                    busca = 1;
+                    print('Busca por distancia Heuclidiana!!')
+                    
         # Set the screen background
         screen.fill(BLACK)
-     
+        
+        #pygame.draw.rect(screen, [125, 125, 125], button)  # draw button
+        
         # Draw the grid
         for row in range(10):
             for column in range(10):
