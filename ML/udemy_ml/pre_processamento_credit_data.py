@@ -24,3 +24,8 @@ from sklearn.preprocessing import Imputer
 imputer = Imputer(missing_values='NaN', strategy='mean', axis=0)
 imputer = imputer.fit(previsores[:, 0:3])
 previsores[:, 0:3] = imputer.transform(previsores[:, 0:3])
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+previsores = scaler.fit_transform(previsores)
+print(previsores)
