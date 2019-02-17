@@ -27,3 +27,5 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 precisao = accuracy_score(classe_teste, previsoes)
 matriz = confusion_matrix(classe_teste, previsoes)
 
+print(precisao)
+print(matriz)
