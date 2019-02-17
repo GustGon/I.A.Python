@@ -64,7 +64,10 @@ for row in range(SQUARE_NUMBER_ROW):
     #grid[1][5] = 1
     
 def jogada_PC():
+
+
     
+
     return
 
 def main():
@@ -117,7 +120,7 @@ def main():
                         ini.append(column);
                         ini.append(row);
                         player *= (-1);
-                        #jogada_PC();
+                        jogada_PC();
                     elif ( PLAYER_TURN == player and grid[row][column] == NADA  ):
                         grid[row][column] = PLAYER;
                         end.append(column);

@@ -19,4 +19,8 @@ if (__name__ == '__main__'):
 
     onehotencoder = OneHotEncoder(categorical_features=[1,3,5,6,7,8,9,13]);
     previsores = onehotencoder.fit_transform(previsores).toarray()
-    print(previsores)
+
+    from sklearn.preprocessing import StandardScaler
+    scaler = StandardScaler()
+    previsores = scaler.fit_transform(previsores)
+    print(previsores[:,14])
