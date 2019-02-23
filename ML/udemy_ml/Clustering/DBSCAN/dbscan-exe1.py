@@ -22,4 +22,4 @@ previsoes = dbscan.labels_
 cores = ['g.', 'r.', 'b.']
 for i in range(len(x)):
     plt.plot(base[i][0], base[i][1], cores[previsoes[i]])
-plt.show())
+plt.show()
