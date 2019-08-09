@@ -8,3 +8,4 @@ Bibliotecas a serem instaladas:
 - Pandas
 - pytorch
 - numpy
+- matplotlib
