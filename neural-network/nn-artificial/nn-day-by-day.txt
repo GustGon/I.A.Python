@@ -1,0 +1,12 @@
+Artificial neural networks:
+
+My day by day use for artificial neural network.
+
+After pay atention on the first class of artificial neural networks that talked about a introduction of what is it and what is it for
+came on my mind some ideias of how to use this on my day by day work. One of this ideias is a log analyzer, in a cellphone existe a lot
+of logs for every diferent type of problems. One of the ideias is to use the logs of problems alredy solved seperade by categories for exemple
+power, wifi, bluetooth, audio, system... With this logs train a supervisioned NN to analyze it and at last help to decreasse the time spent on the log analyze
+and if possible show the line of the log that shows the problem rapend.
+
+Other ideia is to use a unsupervised neural network with a lot of logs from diferente problems without say whats ir the problem of each log
+and the trained NN show me wich logs are a similar, this will help to try same resolution for similars type of log decreasing the time spent.
