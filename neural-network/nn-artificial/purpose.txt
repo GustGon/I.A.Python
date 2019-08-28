@@ -1,1 +1,11 @@
 Artificial neural networks used for generics problems
+
+Things to think:
+
+to build the neural network architecture
+-> Learning rate;
+-> Number of Neurons on hiden layers;
+-> Activation function;
+-> Number of training epoch;
+-> Desired error;
+-> Momentum rate;
